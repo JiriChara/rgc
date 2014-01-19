@@ -6,16 +6,12 @@
 
 === Installation
 
-=begin shell
-gem install rgc
-=end
+  gem install rgc
 
 === Usage
 
 Get a help:
 
-=begin shell
-rgc help
-=end
+  rgc help
 
 :include:rgc.rdoc
