@@ -1,0 +1,5 @@
+= rbc
+
+Generate this with
+    rbc rdoc
+After you have described your command line interface
