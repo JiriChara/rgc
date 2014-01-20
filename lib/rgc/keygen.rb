@@ -5,11 +5,15 @@ module Rgc
       @range = options[:range] || 512
 
       if File.exists?(path = args.first)
-        raise ArgumentError, "Key file already exists."
+        abort "Key file already exists."
       end
 
-      File.open(path, 'w') do |f|
-        f.write(generate_secure_key)
+      begin
+        File.open(path, 'w') do |f|
+          f.write(generate_secure_key)
+        end
+      rescue
+        abort "Cannot open #{path} for writing."
       end
     end
 
