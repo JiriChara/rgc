@@ -28,6 +28,8 @@ module Rgc
         true
       end
 
+      init_keygen
+
       exit run(ARGV)
     end
 
@@ -38,9 +40,20 @@ module Rgc
     end
     
     def init_keygen
-      desc('generate a rbc key in the given file')
+      desc('generate a rgc key in the given file')
 
       command(:keygen) do |c|
+
+        c.flag [:type, :t],
+          desc: "set the encryption type",
+          must_match: ["base64", "hex"],
+          default_value: "base64"
+
+        c.flag [:range, :r],
+          desc: "set the length of a key",
+          type: Integer,
+          default_value: 512
+
         c.action do |global_options, options, args|
           Rgc::Keygen.new(global_options, options, args)
         end

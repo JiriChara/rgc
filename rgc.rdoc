@@ -1,5 +1,5 @@
-= rbc
+= rgc
 
 Generate this with
-    rbc rdoc
+    rgc rdoc
 After you have described your command line interface
