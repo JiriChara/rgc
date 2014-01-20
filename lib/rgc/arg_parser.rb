@@ -25,20 +25,15 @@ module Rgc
       on_error do |exception|
         # Error logic here
         # return false to skip default error handling
-        true
+        false
       end
 
       init_keygen
+      init_init
 
       exit run(ARGV)
     end
 
-    def init_clean
-    end
-
-    def init_smudge
-    end
-    
     def init_keygen
       desc('generate a rgc key in the given file')
 
@@ -58,6 +53,23 @@ module Rgc
           Rgc::Keygen.new(global_options, options, args)
         end
       end
+    end
+
+    def init_init
+      desc('prepare git repository to use rgc with given key file')
+
+      command(:init) do |c|
+
+        c.action do |global_options, options, args|
+          Rgc::Init.new(global_options, options, args)
+        end
+      end
+    end
+
+    def init_clean
+    end
+
+    def init_smudge
     end
 
     def init_encrypt
