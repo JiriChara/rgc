@@ -17,6 +17,7 @@ module Rgc
       end
     end
 
+  private
     def generate_secure_key
       SecureRandom.send(@type, @range)
     end
