@@ -25,11 +25,12 @@ module Rgc
       on_error do |exception|
         # Error logic here
         # return false to skip default error handling
-        false
+        true
       end
 
       init_keygen
       init_init
+      init_encrypt
 
       exit run(ARGV)
     end
@@ -73,6 +74,16 @@ module Rgc
     end
 
     def init_encrypt
+      desc('set files for encryption')
+
+      command(:encrypt) do |c|
+
+        c.flag [:yaml, :y], desc: "yaml values to encrypt"
+
+        c.action do |global_options, options, args|
+          Rgc::Encrypt.new(global_options, options, args)
+        end
+      end
     end
   end
 end
