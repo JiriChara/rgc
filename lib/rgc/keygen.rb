@@ -1,9 +1,6 @@
 module Rgc
   class Keygen
     def initialize(global_options, options, args)
-      @type  = options[:type]  || :base64
-      @range = options[:range] || 512
-
       if File.exists?(path = args.first)
         abort "Key file already exists."
       end
@@ -19,7 +16,7 @@ module Rgc
 
   private
     def generate_secure_key
-      SecureRandom.send(@type, @range)
+      OpenSSL::Cipher.new("AES-128-CBC").random_key
     end
   end
 end

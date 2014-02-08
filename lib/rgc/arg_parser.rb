@@ -25,12 +25,15 @@ module Rgc
       on_error do |exception|
         # Error logic here
         # return false to skip default error handling
+        puts exception.backtrace
         true
       end
 
       init_keygen
       init_init
       init_encrypt
+      init_clean
+      init_smudge
 
       exit run(ARGV)
     end
@@ -39,16 +42,6 @@ module Rgc
       desc('generate a rgc key in the given file')
 
       command(:keygen) do |c|
-
-        c.flag [:type, :t],
-          desc: "set the encryption type",
-          must_match: ["base64", "hex"],
-          default_value: "base64"
-
-        c.flag [:range, :r],
-          desc: "set the length of a key",
-          type: Integer,
-          default_value: 512
 
         c.action do |global_options, options, args|
           Rgc::Keygen.new(global_options, options, args)
@@ -68,9 +61,25 @@ module Rgc
     end
 
     def init_clean
+      desc('encrypt content of STDIN and write to STDOUT')
+
+      command(:clean) do |c|
+
+        c.action do |global_options, options, args|
+          Rgc::Clean.new(global_options, options, args)
+        end
+      end
     end
 
     def init_smudge
+      desc('decrypt content of STDIN and write to STDOUT')
+
+      command(:smudge) do |c|
+
+        c.action do |global_options, options, args|
+          Rgc::Smudge.new(global_options, options, args)
+        end
+      end
     end
 
     def init_encrypt

@@ -1,12 +1,12 @@
 module Rgc
   class Init
     def initialize(global_options, options, args)
-      abort "Key file must be given!" if (key_file = args.first).nil?
+      abort "Key file must be given!" if (@key_file = args.first).nil?
 
       begin
-        @secret = File.read(key_file)
+        @secret = File.read(@key_file)
       rescue
-        abort "Cannot read key file #{key_file}"
+        abort "Cannot read key file #{@key_file}"
       end
 
       stdout, stderr, status = Open3.capture3("git status  -uno --porcelain")
@@ -15,10 +15,10 @@ module Rgc
         abort "git status failed - is this a git repository?"
       end
 
-      unless stdout.length == 0
-        $stderr.puts "Working directory not clean"
-        abort "Please commit your changes or 'git stash' them."
-      end
+      # unless stdout.length == 0
+      #   $stderr.puts "Working directory not clean"
+      #   abort "Please commit your changes or 'git stash' them."
+      # end
 
       init_rgc_config_file
 
@@ -37,7 +37,7 @@ module Rgc
       if File.exists?(@config)
         validate_config_file(@config)
       else
-        File.open(@config, 'w') { |f| YAML::dump({}, f) }
+        File.open(@config, 'w') { |f| YAML::dump({ rgc_key_file: @key_file }, f) }
       end
     end
 
