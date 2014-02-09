@@ -2,7 +2,7 @@ PATH
   remote: .
   specs:
     rgc (0.0.1)
-      gli (= 2.8.1)
+      gli (~> 2.8.1)
 
 GEM
   remote: https://rubygems.org/
@@ -47,9 +47,9 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  aruba
-  faker
-  rake
-  rdoc
+  aruba (~> 0.5)
+  faker (~> 1.2)
+  rake (~> 10.1)
+  rdoc (~> 4.1)
   rgc!
-  rspec
+  rspec (~> 2.14)
