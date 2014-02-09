@@ -20,8 +20,13 @@ module Rgc
       end
 
       unless stdout.length == 0
-        $stderr.puts "Working directory not clean"
+        STDERR.puts "Working directory not clean"
         abort "Please commit your changes or 'git stash' them."
+      end
+
+      stdout, stderr, status = Open3.capture3("git rev-parse --show-prefix")
+      if stdout.strip != ""
+        abort "Not in top-level of repository"
       end
 
       init_rgc_config_file
@@ -42,7 +47,7 @@ module Rgc
       # yet) just skip checkout
       out, err, status = Open3.capture3("git rev-parse HEAD >/dev/null 2>/dev/null")
       if status == 0
-
+        out, err, status = Open3.capture3("git checkout -f HEAD -- .")
       end
     end
 
