@@ -25,8 +25,7 @@ module Rgc
       on_error do |exception|
         # Error logic here
         # return false to skip default error handling
-        puts exception.backtrace
-        true
+        false
       end
 
       init_keygen

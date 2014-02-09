@@ -13,7 +13,11 @@ module Rgc
       @aes.decrypt
       @aes.key = @key
 
-      STDOUT.print(@aes.update(Base64.decode64(content)) + @aes.final)
+      begin
+        STDOUT.print(@aes.update(Base64.decode64(content)) + @aes.final)
+      rescue
+        abort "File not encrypted"
+      end
     end
   end
 end
