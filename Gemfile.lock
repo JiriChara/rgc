@@ -1,8 +1,8 @@
 PATH
   remote: .
   specs:
-    rgc (0.0.1)
-      gli (~> 2.8.1)
+    rgc (0.0.3)
+      gli (~> 2.8)
 
 GEM
   remote: https://rubygems.org/

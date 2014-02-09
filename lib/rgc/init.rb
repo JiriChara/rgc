@@ -56,10 +56,10 @@ module Rgc
     end
 
     def add_git_config_options
-      smudge = "git config filter.smudge rgc smudge"
+      smudge = "git config filter.smudge \"rgc smudge\""
       stdout, stderr, status_smudge = Open3.capture3(smudge)
 
-      clean = "git config filter.clean rgc clean"
+      clean = "git config filter.clean \"rgc clean\""
       stdout, stderr, status_clean = Open3.capture3(clean)
 
       if [0, 0] != [status_smudge, status_clean]
