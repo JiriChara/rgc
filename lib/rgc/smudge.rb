@@ -13,7 +13,7 @@ module Rgc
       @aes.decrypt
       @aes.key = @key
 
-      @aes.update(Base64.decode64(content)) + @aes.final
+      STDOUT.print(@aes.update(Base64.decode64(content)) + @aes.final)
     end
   end
 end

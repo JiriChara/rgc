@@ -14,7 +14,7 @@ module Rgc
       @aes.key = @key
       # TODO: consinder to set @aes.iv
 
-      Base64.encode64(@aes.update(content) + @aes.final)
+      STDOUT.print(Base64.encode64(@aes.update(content) + @aes.final))
     end
   end
 end
