@@ -1,5 +1,7 @@
 = rgc
 
+*rgc is still in development and it is not working yet. Please don't use it in your repositories!*
+
 +rgc+ enables you to transparently encrypt certain files in a git repository. You can even encrypt certain values in a +yaml+ file. Files which you choose to protect are encrypted when committed, and decrypted when checked out. This way you can freely share your git repo containing mix of public and private content. Developers without the secret key can still clone and commit to repository.
 
 +rgc+ was written by Jiri Chara <jirik dot chara at gmail dot com>.
@@ -13,5 +15,3 @@
 Get a help:
 
   rgc help
-
-:include:rgc.rdoc

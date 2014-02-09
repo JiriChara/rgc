@@ -35,6 +35,15 @@ module Rgc
       end
 
       add_git_config_options
+
+      # Do a force checkout so any files that were previously checked out
+      # encrypted will now be checked out decrypted.
+      # If HEAD doesn't exist (perhaps because this repo doesn't have any files
+      # yet) just skip checkout
+      out, err, status = Open3.capture3("git rev-parse HEAD >/dev/null 2>/dev/null")
+      if status == 0
+
+      end
     end
 
     def init_rgc_config_file
@@ -56,13 +65,16 @@ module Rgc
     end
 
     def add_git_config_options
-      smudge = "git config filter.smudge \"rgc smudge\""
+      smudge = "git config filter.rgc.smudge \"rgc smudge\""
       stdout, stderr, status_smudge = Open3.capture3(smudge)
 
-      clean = "git config filter.clean \"rgc clean\""
+      clean = "git config filter.rgc.clean \"rgc clean\""
       stdout, stderr, status_clean = Open3.capture3(clean)
 
-      if [0, 0] != [status_smudge, status_clean]
+      diff = "git config diff.rgc.textconv \"rgc diff\""
+      stdout, stderr, status_diff = Open3.capture3(diff)
+
+      if [0, 0, 0] != [status_smudge, status_clean, status_diff]
         abort "Cannot configure git."
       end
     rescue Errno::ENOENT
