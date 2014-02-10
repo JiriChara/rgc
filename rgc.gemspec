@@ -33,8 +33,11 @@ spec = Gem::Specification.new do |s|
     lib/rgc/init.rb
     lib/rgc/encrypt.rb
     lib/rgc/arg_parser.rb
+    lib/rgc/config.rb
+    lib/rgc/processor.rb
     lib/rgc/clean.rb
     lib/rgc/smudge.rb
+    lib/rgc/diff.rb
     README.rdoc
   )
 

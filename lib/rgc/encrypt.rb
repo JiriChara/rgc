@@ -1,13 +1,12 @@
 module Rgc
   class Encrypt
-    CONFIG = '.rgc.yml'
-
     def initialize(global_options, options, args)
-      load_rgc_config
+      @config  = Rgc::Config.new
+      @encrypt = @config.config
 
       determine_encryption(args, options)
 
-      save_new_config
+      @config.update(@encrypt)
 
       update_git_attributes
     end
@@ -29,20 +28,6 @@ module Rgc
 
           a.join(" ")
         end
-      end
-    end
-
-    def load_rgc_config
-      unless File.exists?(CONFIG)
-        abort "#{CONFIG} not found. Please run `rgc init` first."
-      end
-
-      @encrypt = YAML.load_file(CONFIG)
-    end
-
-    def save_new_config
-      f = File.open(CONFIG, 'w') do |f|
-        YAML::dump(@encrypt, f)
       end
     end
 

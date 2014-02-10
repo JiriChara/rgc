@@ -29,7 +29,7 @@ module Rgc
         abort "Not in top-level of repository"
       end
 
-      init_rgc_config_file
+      @config = Rgc::Config.new(key_file: @key_file)
 
       unless File.exist?('.gitattributes')
         begin
@@ -48,24 +48,6 @@ module Rgc
       out, err, status = Open3.capture3("git rev-parse HEAD >/dev/null 2>/dev/null")
       if status == 0
         out, err, status = Open3.capture3("git checkout -f HEAD -- .")
-      end
-    end
-
-    def init_rgc_config_file
-      @config = Rgc::Encrypt::CONFIG
-
-      if File.exists?(@config)
-        validate_config_file(@config)
-      else
-        File.open(@config, 'w') { |f| YAML::dump({ rgc_key_file: @key_file }, f) }
-      end
-    end
-
-    def validate_config_file
-      begin
-        raise unless YAML.load_file(@config).is_a?(Hash)
-      rescue
-        abort("Invalid rgc config file (#{@config}). Delete it or fix it.")
       end
     end
 

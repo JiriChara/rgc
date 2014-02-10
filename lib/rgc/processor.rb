@@ -28,6 +28,9 @@ module Rgc
           abort "Cannot decrypt file."
         end
       end
+
+      def determine_encryption_type
+      end
     end
   end
 end
