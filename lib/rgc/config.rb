@@ -1,10 +1,10 @@
 module Rgc
   class Config
-    def initialize(opts={})
-      @path = opts[:path] || '.rgc.yml'
+    PATH = '.rgc.yml'
 
-      if File.exists?(@path)
-        abort "Not valid config file #{@path}" unless config.is_a?(Hash)
+    def initialize(opts={})
+      if File.exists?(PATH)
+        abort "Not valid config file #{PATH}" unless config.is_a?(Hash)
       else
         create_new_config(rgc_key_file: opts[:key_file])
       end
@@ -21,10 +21,10 @@ module Rgc
     end
 
     def path
-      if File.exists?(@path)
-        @path
+      if File.exists?(PATH)
+        PATH
       else
-        abort "Config file `#{@path}` does not exist."
+        abort "Config file `#{PATH}` does not exist."
       end
     end
 
@@ -33,7 +33,7 @@ module Rgc
     end
 
     def create_new_config(init_value)
-      File.open(@path, 'w') do |f|
+      File.open(PATH, 'w') do |f|
         YAML::dump(init_value, f)
       end
     end
