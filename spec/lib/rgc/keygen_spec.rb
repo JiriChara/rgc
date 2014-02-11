@@ -2,29 +2,16 @@ require 'spec_helper'
 
 describe Rgc::Keygen do
   context :initialize do
-    it 'should set `type` instance variable if given' do
-      File.stub(open: true)
-      File.stub(exists?: false)
-
-      keygen = Rgc::Keygen.new({}, { type: "hex" }, [""])
-      keygen.instance_variable_get(:@type).should eq("hex")
-    end
-
-    it 'should set `range` instance variable if given' do
-      File.stub(open: true)
-      File.stub(exists?: false)
-
-      keygen = Rgc::Keygen.new({}, { range: 32 }, [""])
-      keygen.instance_variable_get(:@range).should eq(32)
-    end
-
-    it 'should abort when key file not exists' do
+    it 'should abort when key file exists' do
       File.open(file = "/tmp/#{SecureRandom.hex(32)}", "w")
 
-      Rgc::Keygen.any_instance.should_receive(:abort)
-        .with("Key file already exists.")
+      stderr = capture_stderr do
+        expect {
+          Rgc::Keygen.new({}, {}, [file])
+        }.to raise_error(SystemExit)
+      end
 
-      Rgc::Keygen.new({}, {}, [file])
+      stderr.should eq("Key file already exists.\n")
 
       File.delete(file)
     end
@@ -32,10 +19,13 @@ describe Rgc::Keygen do
     it 'should abort when file cannot be opened for writing' do
       path = "/this/file/does/not/exist"
 
-      Rgc::Keygen.any_instance.should_receive(:abort)
-        .with("Cannot open #{path} for writing.")
+      stderr = capture_stderr do
+        expect {
+          Rgc::Keygen.new({}, {}, [path])
+        }.to raise_error(SystemExit)
+      end
 
-      Rgc::Keygen.new({}, {}, [path])
+      stderr.should eq("Cannot open #{path} for writing.\n")
     end
 
     it 'should create a file and insert secure key to it' do
@@ -50,17 +40,16 @@ describe Rgc::Keygen do
   end
 
   context :generate_secure_key do
-    it 'should generate random key' do
-      File.stub(open: true)
-      File.stub(exists?: false)
+    it 'should invoke `random_key` method of OpenSSL::Cipher' do
+      file = "/tmp/#{SecureRandom.hex(32)}"
 
-      type  = :hex
-      range = 5
+      keygen = Rgc::Keygen.new({}, {}, [file])
 
-      keygen = Rgc::Keygen.new({}, { type: type, range: range }, [""])
+      OpenSSL::Cipher.any_instance.should_receive(:random_key)
 
-      ::SecureRandom.should_receive(type).with(range)
       keygen.send(:generate_secure_key)
+
+      File.delete(file)
     end
   end
 end
