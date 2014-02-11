@@ -1,7 +1,8 @@
 module Rgc
   class Config
-    PATH     = '.rgc.yml'
-    KEY_FILE = :rgc_key_file
+    PATH                       = '.rgc.yml'
+    KEY_FILE                   = :rgc_key_file
+    DEFAULT_GITATTRIBUTES_PATH = '.git/info/attributes'
 
     def initialize(opts={})
       if File.exists?(PATH)
@@ -58,9 +59,11 @@ module Rgc
     #       'db.yml'   => '--yaml production.password,beta.password'
     #     }
     def paths
-      cfg = config.dup
-      cfg.delete(:rgc_key_file)
-      cfg
+      config[:paths]
+    end
+
+    def gitattributes_location
+      config[:gitattributes_location] || DEFAULT_GITATTRIBUTES_PATH
     end
   end
 end

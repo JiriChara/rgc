@@ -2,11 +2,15 @@ require 'spec_helper'
 
 describe Rgc::Config do
   before(:each) do
-    @path_to_key = '/tmp/rgc.key'
+    @path_to_key            = '/tmp/rgc.key'
+    @gitattributes_location = '.gitattributes'
     @hash = {
-      :rgc_key_file => @path_to_key,
-      '*.secret'    => '',
-      'secret.yml'  => '--yaml production.password,mysql.password'
+      :gitattributes_location => @gitattributes_location,
+      :rgc_key_file           => @path_to_key,
+      :paths => {
+        '*.secret'   => '',
+        'secret.yml' => '--yaml production.password,mysql.password'
+      }
     }
 
     File.open(Rgc::Config::PATH, File::CREAT|File::TRUNC|File::WRONLY) do |f|
@@ -160,9 +164,7 @@ describe Rgc::Config do
 
   context :paths do
     it 'should return paths for encryption' do
-      @hash.delete(:rgc_key_file)
-
-      Rgc::Config.new.paths.should eq(@hash)
+      Rgc::Config.new.paths.should eq(@hash[:paths])
     end
 
     it 'should invoke config method' do
@@ -170,6 +172,32 @@ describe Rgc::Config do
       cfg.should_receive(:config).and_return(YAML.load_file(Rgc::Config::PATH))
 
       cfg.paths
+    end
+  end
+
+  context :gitattributes_location do
+    it 'should return configured gitattributes location' do
+      Rgc::Config.new.gitattributes_location.should eq(
+        @gitattributes_location
+      )
+    end
+
+    it 'should return .git/info/attributes if not preconfigured' do
+      hash = {
+        :rgc_key_file => @path_to_key,
+        :paths => {
+          '*.secret'   => '',
+          'secret.yml' => '--yaml production.password,mysql.password'
+        }
+      }
+
+      File.open(Rgc::Config::PATH, File::CREAT|File::TRUNC|File::WRONLY) do |f|
+        YAML::dump(hash, f)
+      end
+
+      Rgc::Config.new.gitattributes_location.should eq(
+        '.git/info/attributes'
+      )
     end
   end
 end

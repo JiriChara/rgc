@@ -32,6 +32,7 @@ spec = Gem::Specification.new do |s|
     lib/rgc/keygen.rb
     lib/rgc/init.rb
     lib/rgc/encrypt.rb
+    lib/git_attributes.rb
     lib/rgc/arg_parser.rb
     lib/rgc/config.rb
     lib/rgc/processor.rb

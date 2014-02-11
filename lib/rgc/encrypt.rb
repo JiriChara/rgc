@@ -1,14 +1,20 @@
 module Rgc
   class Encrypt
     def initialize(global_options, options, args)
-      @config  = Rgc::Config.new
-      @encrypt = @config.config
+      @config        = Rgc::Config.new
+      @encrypt       = @config.paths
+      @gitattributes = GitAttributes.new
 
       determine_encryption(args, options)
 
       @config.update(@encrypt)
 
-      update_git_attributes
+
+      # File.open(@config.gitattributes_location, 'a') do |f|
+      #   @encrypt.each do |k, v|
+      #     f.puts("#{k} filter=rgc diff=rgc")
+      #   end
+      # end
     end
 
     def determine_encryption(args, options)
@@ -27,18 +33,6 @@ module Rgc
           end
 
           a.join(" ")
-        end
-      end
-    end
-
-    def update_git_attributes
-      unless File.exists?('.gitattributes')
-        abort '.gitattributes file not found. Please run `rgc init` first.'
-      end
-
-      File.open('.gitattributes', 'a') do |f|
-        @encrypt.each do |k, v|
-          f.puts("#{k} filter=rgc diff=rgc")
         end
       end
     end
