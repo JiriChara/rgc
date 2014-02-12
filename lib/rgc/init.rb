@@ -10,7 +10,7 @@ module Rgc
       end
 
       begin
-        stdout, stderr, status = Open3.capture3("git status  -uno --porcelain")
+        stdout, status = Open3.capture2("git status  -uno --porcelain")
       rescue Errno::ENOENT
         abort "Cannot run `git status  -uno --porcelain`."
       end
@@ -20,7 +20,7 @@ module Rgc
       end
 
       unless stdout.length == 0
-        STDERR.puts "Working directory not clean"
+        STDERR.puts "Working directory not clean."
         abort "Please commit your changes or 'git stash' them."
       end
 
