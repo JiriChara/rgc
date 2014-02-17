@@ -27,17 +27,18 @@ spec = Gem::Specification.new do |s|
   s.files = %w(
     bin/rgc
     lib/rgc.rb
-    lib/rgc/version.rb
-    lib/rgc/keygen.rb
-    lib/rgc/init.rb
-    lib/rgc/encrypt.rb
-    lib/git_attributes.rb
     lib/rgc/arg_parser.rb
-    lib/rgc/config.rb
-    lib/rgc/processor.rb
     lib/rgc/clean.rb
-    lib/rgc/smudge.rb
+    lib/rgc/config.rb
     lib/rgc/diff.rb
+    lib/rgc/encrypt.rb
+    lib/rgc/git_attributes.rb
+    lib/rgc/git.rb
+    lib/rgc/init.rb
+    lib/rgc/keygen.rb
+    lib/rgc/processor.rb
+    lib/rgc/smudge.rb
+    lib/rgc/version.rb
     README.rdoc
   )
 
