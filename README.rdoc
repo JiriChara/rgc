@@ -1,4 +1,5 @@
 = rgc
+{<img src="https://travis-ci.org/JiriChara/rgc.png?branch=master" alt="Build Status" />}[https://travis-ci.org/JiriChara/rgc]
 
 *rgc is still in development and it is not working yet. Please don't use it in your repositories!*
 
