@@ -13,4 +13,10 @@ spec = eval(File.read('rgc.gemspec'))
 
 Gem::PackageTask.new(spec) do |pkg|
 end
-task :default => :package
+
+desc 'run Rspec specs'
+task :spec do
+  sh 'rspec spec'
+end
+
+task :default => [:spec, :package]
