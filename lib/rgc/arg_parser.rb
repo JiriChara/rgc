@@ -25,6 +25,7 @@ module Rgc
       on_error do |exception|
         # Error logic here
         # return false to skip default error handling
+        puts exception.backtrace
         true
       end
 
@@ -52,6 +53,11 @@ module Rgc
       desc('prepare git repository to use rgc with given key file')
 
       command(:init) do |c|
+
+        c.flag [:attributes, :a], 
+          desc: "location of git attributes file. Posible values: root, info.",
+          default_value: "info",
+          must_match: ["root", "info"]
 
         c.action do |global_options, options, args|
           Rgc::Init.new(global_options, options, args)
@@ -85,8 +91,9 @@ module Rgc
       desc('set files for encryption')
 
       command(:encrypt) do |c|
-
-        c.flag [:yaml, :y], desc: "yaml values to encrypt"
+        c.flag [:string, :s],
+          desc: "encrypt only given string and leave rest of the file.",
+          type: Array
 
         c.action do |global_options, options, args|
           Rgc::Encrypt.new(global_options, options, args)

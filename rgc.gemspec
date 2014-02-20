@@ -24,23 +24,7 @@ spec = Gem::Specification.new do |s|
   )
   s.rdoc_options << '--title' << 'rgc' << '--main' << 'README.rdoc' << '-ri'
 
-  s.files = %w(
-    bin/rgc
-    lib/rgc.rb
-    lib/rgc/arg_parser.rb
-    lib/rgc/clean.rb
-    lib/rgc/config.rb
-    lib/rgc/diff.rb
-    lib/rgc/encrypt.rb
-    lib/rgc/git_attributes.rb
-    lib/rgc/git.rb
-    lib/rgc/init.rb
-    lib/rgc/keygen.rb
-    lib/rgc/processor.rb
-    lib/rgc/smudge.rb
-    lib/rgc/version.rb
-    README.rdoc
-  )
+  s.files = Dir['LICENSE.txt', 'README.rdoc', 'lib/**/*']
 
   s.bindir = 'bin'
   s.executables << 'rgc'

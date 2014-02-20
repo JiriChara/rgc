@@ -1,35 +1,38 @@
 module Rgc
   class Processor
-    class << self
-      include Rgc::KeyFile
+    PREFIX = "*@rgc@*-"
+    SUFFIX = "-*@rgc@*"
 
-      def encrypt(content)
-        load_key
+    def initialize
+      @key = File.read(Rgc::Config.new.key_file_path)
 
-        @aes = OpenSSL::Cipher.new("AES-128-CBC")
-        @aes.encrypt
-        @aes.key = @key
-        # TODO: consinder to set @aes.iv
+      @aes = OpenSSL::Cipher.new("AES-128-CBC")
+    end
 
-        "*@rgc@*-#{Base64.encode64(@aes.update(content) + @aes.final)}"
+    def encrypt(content, value=nil)
+      @aes.encrypt
+      @aes.key = @key
+
+      if value
+        content.gsub(value, encrypt_string(value))
+      else
+        encrypt_string(content)
       end
+    end
 
-      def decrypt(content)
-        load_key
+    def encrypt_string(str)
+      "#{PREFIX}#{Base64.encode64(@aes.update(str) + @aes.final)}#{SUFFIX}"
+    end
 
-        @aes = OpenSSL::Cipher.new("AES-128-CBC")
-        @aes.decrypt
-        @aes.key = @key
-        # TODO: consinder to set @aes.iv
+    def decrypt_string(str)
+    end
 
-        begin
-          @aes.update(Base64.decode64(content)) + @aes.final
-        rescue
-          abort "Cannot decrypt file."
-        end
-      end
+    def decrypt(content)
+      @aes.decrypt
+      @aes.key = @key
 
-      def determine_encryption_type
+      content.sub(/#{PREFIX}(\w+)#{SUFFIX}/) do
+        decrypt_string($1))
       end
     end
   end

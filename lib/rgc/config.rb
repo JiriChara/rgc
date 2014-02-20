@@ -1,14 +1,34 @@
 module Rgc
   class Config
     PATH                       = '.rgc.yml'
-    KEY_FILE                   = :rgc_key_file
     DEFAULT_GITATTRIBUTES_PATH = '.git/info/attributes'
 
+    class << self
+      def create(key_file, opts={})
+        unless File.exists?(key_file)
+          abort "Key file #{key_file} does not exist."
+        end
+
+        gitattributes_location = if opts[:gitattributes_location] == "root"
+          ".gitattributes"
+        else
+          DEFAULT_GITATTRIBUTES_PATH
+        end
+
+        File.open(Rgc::Config::PATH, 'w') do |f|
+          YAML::dump({
+            key_file: key_file,
+            gitattributes_location: gitattributes_location
+          }, f)
+        end
+
+        self.new
+      end
+    end
+
     def initialize(opts={})
-      if File.exists?(PATH)
-        abort "Not valid config file #{PATH}" unless config.is_a?(Hash)
-      else
-        create_new_config(opts[:key_file])
+      if File.exists?(path)
+        abort "Not valid config file #{PATH}" unless valid_config?
       end
     end
 
@@ -30,25 +50,18 @@ module Rgc
       end
     end
 
-    def create_new_config(key_file)
-      unless File.exists?(key_file)
-        abort "Key file #{key_file} does not exist."
-      end
-
-      File.open(PATH, 'w') do |f|
-        YAML::dump({ KEY_FILE => key_file }, f)
-      end
-    end
-    private :create_new_config
-
     # Get the whole content of config as a hash
     def config
       YAML.load_file(path)
     end
 
+    def valid_config?
+      config.is_a?(Hash) && !config[:key_file].nil?
+    end
+
     # Get path to the key used for encryption.
     def key_file_path
-      config[KEY_FILE]
+      config[:key_file]
     end
 
     # Returns all paths with configured options

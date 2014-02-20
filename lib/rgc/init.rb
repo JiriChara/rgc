@@ -26,16 +26,17 @@ module Rgc
 
       stdout, stderr, status = Open3.capture3("git rev-parse --show-prefix")
       if stdout.strip != ""
-        abort "Not in top-level of repository"
+        abort "Not on top-level of repository."
       end
 
-      @config = Rgc::Config.new(key_file: @key_file)
+      # Create new config file
+      @config = Rgc::Config.create(@key_file)
 
-      unless File.exist?('.gitattributes')
+      unless File.exist?(@config.gitattributes_location)
         begin
-          File.open('.gitattributes', 'w') {}
+          File.open(@config.gitattributes_location, 'w') {}
         rescue Errno::EACCES
-          abort "Cannot open .gitattributes for writing."
+          abort "Cannot open #{@config.gitattributes_location} for writing."
         end
       end
 
