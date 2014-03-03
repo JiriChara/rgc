@@ -95,6 +95,9 @@ module Rgc
           desc: "encrypt only given string and leave rest of the file.",
           type: Array
 
+        c.switch [:password, :p],
+          desc: "like string, but string to encrypt will be typed into password field."
+
         c.action do |global_options, options, args|
           Rgc::Encrypt.new(global_options, options, args)
         end

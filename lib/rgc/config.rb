@@ -17,7 +17,7 @@ module Rgc
 
         File.open(Rgc::Config::PATH, 'w') do |f|
           YAML::dump({
-            key_file: key_file,
+            rgc_key_file: key_file,
             gitattributes_location: gitattributes_location
           }, f)
         end
@@ -32,9 +32,17 @@ module Rgc
       end
     end
 
-    def update(hash)
+    def update(hash, opts={})
       unless hash.is_a?(Hash)
         abort "Cannot update config. Invalid options given."
+      end
+
+      if opts[:paths_only] == true
+        hash = {
+          rgc_key_file: key_file_path,
+          gitattributes_location: gitattributes_location,
+          paths: hash
+        }
       end
 
       File.open(path, 'w') do |f|
@@ -56,12 +64,12 @@ module Rgc
     end
 
     def valid_config?
-      config.is_a?(Hash) && !config[:key_file].nil?
+      config.is_a?(Hash) && !config[:rgc_key_file].nil?
     end
 
     # Get path to the key used for encryption.
     def key_file_path
-      config[:key_file]
+      config[:rgc_key_file]
     end
 
     # Returns all paths with configured options
@@ -72,7 +80,7 @@ module Rgc
     #       'db.yml'   => '--yaml production.password,beta.password'
     #     }
     def paths
-      config[:paths]
+      config[:paths] || {}
     end
 
     def gitattributes_location

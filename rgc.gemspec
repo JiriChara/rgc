@@ -29,6 +29,8 @@ spec = Gem::Specification.new do |s|
   s.bindir = 'bin'
   s.executables << 'rgc'
 
+  s.add_runtime_dependency('highline', '~> 1.6')
+
   s.add_development_dependency('rake',  '~> 10.1')
   s.add_development_dependency('rdoc',  '~> 4.1')
   s.add_development_dependency('aruba', '~> 0.5')

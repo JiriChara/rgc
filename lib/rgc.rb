@@ -9,6 +9,7 @@ require 'date'
 require 'rgc/core_ext'
 
 require 'gli'
+require 'highline/import'
 
 module Rgc
   autoload :Keygen,        'rgc/keygen'

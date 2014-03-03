@@ -1,7 +1,7 @@
 module Rgc
   class Processor
-    PREFIX = "*@rgc@*-"
-    SUFFIX = "-*@rgc@*"
+    PREFIX = "*@rgc@*\n"
+    SUFFIX = "*@rgc@*"
 
     def initialize
       @key = File.read(Rgc::Config.new.key_file_path)
@@ -32,7 +32,7 @@ module Rgc
       @aes.key = @key
 
       content.sub(/#{PREFIX}(\w+)#{SUFFIX}/) do
-        decrypt_string($1))
+        decrypt_string($1)
       end
     end
   end

@@ -2,37 +2,40 @@ module Rgc
   class Encrypt
     def initialize(global_options, options, args)
       @config        = Rgc::Config.new
-      @encrypt       = @config.paths
+      @encrypt       = {}
       @gitattributes = GitAttributes.new
 
-      determine_encryption(args, options)
+      if options[:password] == true && !options[:string].nil?
+        abort "You can't pass --password and --string together. Choose one!" 
+      end
 
-      @config.update(@encrypt)
+      @string = if options[:password] == true
+        get_password
+      elsif !options[:string].nil?
+        options[:string]
+      else
+        ""
+      end
 
+      proceed_paths(args, options)
 
-      # File.open(@config.gitattributes_location, 'a') do |f|
-      #   @encrypt.each do |k, v|
-      #     f.puts("#{k} filter=rgc diff=rgc")
-      #   end
-      # end
+      @config.update(@encrypt.merge(@config.paths), paths_only: true)
+
+      @encrypt.each do |k, v|
+        @gitattributes.add(k)
+      end
     end
 
-    def determine_encryption(args, options)
+    def get_password
+      ask("Enter string (password): ") { |q| q.echo = '*' }
+    end
+
+    def proceed_paths(args, options)
       args.each do |arg|
-        @encrypt[arg] = options.select do |k, v|
-          k == :yaml && v != nil
-        end
-
-        @encrypt[arg] = if @encrypt[arg].empty?
-          ""
+        @encrypt[arg] = if @string.empty?
+          @string
         else
-          a = []
-
-          @encrypt[arg].each do |k,v|
-            a << "--#{k} #{v}"
-          end
-
-          a.join(" ")
+          Rgc::Processor.new.encrypt(@string)
         end
       end
     end
